@@ -18,6 +18,9 @@
 // Sessão SMTP usado para envio de e-mail
 SMTPSession smtp;
 
+//variável boleano de trava
+//se inicia como true ao ligar o sensor para permitir o envio do primeiro email;
+
 bool test = true;
 int time2;
 
@@ -72,17 +75,24 @@ void loop() {
   Serial.print("\t");
   Serial.println(chuvaDigitalVal);
   delay(500);
+
+  //contador de tempo inicial
+
   int time = (millis());
   
-
+  //Compara o tempo incial com o tempo registrado a partir da publicação do email, se > 5 minutos ---->
   if((time-time2)>300000){
+    //modifica a "trava" para poder enviar o email
     test = true;
   }
 
+  //Se o sensor indicar chuva e a variavel de trava permitir se envia um email
   if((chuvaDigitalVal==0)&&(test==true)){
     time2 = time;
+    //variavel de trava é ativada para bloquear envio repetido de dados
     test = false;
     time = 0;
+    // email é enviado
     Email();
   }
 }
